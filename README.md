@@ -27,6 +27,12 @@ To run any task with Nx use:
 npx nx <target> <project-name>
 ```
 
+To run only affected verification targets for changed projects use:
+
+```sh
+npx nx affected -t build,test,typecheck --outputStyle=static
+```
+
 These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
 
 [More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
@@ -38,6 +44,14 @@ To version and release the library use
 ```
 npx nx release
 ```
+
+To publish an already-versioned package to GitHub Packages using Nx conventions use:
+
+```sh
+NODE_AUTH_TOKEN="$(gh auth token)" npx nx release publish -p core-ui --registry=https://npm.pkg.github.com --first-release
+```
+
+After the first publish, drop `--first-release` for subsequent publishes.
 
 Pass `--dry-run` to see what would happen without actually releasing the library.
 
