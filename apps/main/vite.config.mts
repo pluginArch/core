@@ -6,7 +6,12 @@ export default defineConfig(() => ({
   root: import.meta.dirname,
   cacheDir: '../../node_modules/.vite/apps/main',
   resolve: {
-    conditions: ['@pluginarch/source'],
+    conditions: [
+      '@pluginarch/source',
+      'module',
+      'browser',
+      'development|production',
+    ],
   },
   server: {
     port: 4200,
