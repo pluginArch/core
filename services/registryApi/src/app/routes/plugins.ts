@@ -113,11 +113,12 @@ export default async function (fastify: FastifyInstance) {
           appUrl: request.body.appUrl,
         };
 
-        const updateResult = await fastify.pluginRegistryCollection.findOneAndReplace(
-          { pluginId: request.params.pluginId },
-          updatedPlugin,
-          { returnDocument: 'after', projection: { _id: 0 } },
-        );
+        const updateResult =
+          await fastify.pluginRegistryCollection.findOneAndReplace(
+            { pluginId: request.params.pluginId },
+            updatedPlugin,
+            { returnDocument: 'after', projection: { _id: 0 } },
+          );
 
         if (!updateResult) {
           throw fastify.httpErrors.notFound(
