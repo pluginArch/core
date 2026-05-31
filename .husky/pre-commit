@@ -1,0 +1,1 @@
+npx nx record -- npx nx format:check --base="remotes/origin/main"

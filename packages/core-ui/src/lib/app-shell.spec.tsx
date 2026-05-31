@@ -28,7 +28,7 @@ describe('AppShell', () => {
         userDisplayName="Dhixson"
       >
         <h1>Hello</h1>
-      </AppShell>
+      </AppShell>,
     );
 
     expect(screen.getByRole('banner')).toBeTruthy();
@@ -52,7 +52,7 @@ describe('AppShell', () => {
         onAccountActionSelect={onAccountActionSelect}
       >
         <div>Body</div>
-      </AppShell>
+      </AppShell>,
     );
 
     fireEvent.click(screen.getByRole('button', { name: /Control Plane/i }));
@@ -61,8 +61,14 @@ describe('AppShell', () => {
     fireEvent.click(screen.getByRole('button', { name: /Dhixson/i }));
     fireEvent.click(screen.getByRole('menuitem', { name: /Profile/i }));
 
-    expect(onServiceSelect).toHaveBeenCalledWith({ id: 'catalog', label: 'Plugin Catalog' });
-    expect(onAccountActionSelect).toHaveBeenCalledWith({ id: 'profile', label: 'Profile' });
+    expect(onServiceSelect).toHaveBeenCalledWith({
+      id: 'catalog',
+      label: 'Plugin Catalog',
+    });
+    expect(onAccountActionSelect).toHaveBeenCalledWith({
+      id: 'profile',
+      label: 'Profile',
+    });
   });
 
   it('fires top navigation callback', () => {
@@ -78,11 +84,14 @@ describe('AppShell', () => {
         onTopNavSelect={onTopNavSelect}
       >
         <div>Body</div>
-      </AppShell>
+      </AppShell>,
     );
 
     fireEvent.click(screen.getByRole('button', { name: /Plugins/i }));
 
-    expect(onTopNavSelect).toHaveBeenCalledWith({ id: 'plugins', label: 'Plugins' });
+    expect(onTopNavSelect).toHaveBeenCalledWith({
+      id: 'plugins',
+      label: 'Plugins',
+    });
   });
 });

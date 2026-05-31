@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { AccountAction, AppShellProps, ServiceItem, TopNavItem } from './types';
+import type {
+  AccountAction,
+  AppShellProps,
+  ServiceItem,
+  TopNavItem,
+} from './types';
 import './core-ui.css';
 
 interface MenuState {
@@ -13,18 +18,24 @@ function useMenuState() {
     accountOpen: false,
   });
 
-  const closeAll = () => setMenuState({ servicesOpen: false, accountOpen: false });
+  const closeAll = () =>
+    setMenuState({ servicesOpen: false, accountOpen: false });
 
   return {
     menuState,
     closeAll,
-    openServices: () => setMenuState({ servicesOpen: true, accountOpen: false }),
+    openServices: () =>
+      setMenuState({ servicesOpen: true, accountOpen: false }),
     openAccount: () => setMenuState({ servicesOpen: false, accountOpen: true }),
   };
 }
 
 function pickActiveService(services: ServiceItem[], activeServiceId?: string) {
-  return services.find((service) => service.id === activeServiceId) ?? services[0] ?? null;
+  return (
+    services.find((service) => service.id === activeServiceId) ??
+    services[0] ??
+    null
+  );
 }
 
 export function AppShell({
@@ -45,12 +56,18 @@ export function AppShell({
   const servicesWrapRef = useRef<HTMLDivElement | null>(null);
   const accountWrapRef = useRef<HTMLDivElement | null>(null);
 
-  const activeService = useMemo(() => pickActiveService(services, activeServiceId), [services, activeServiceId]);
+  const activeService = useMemo(
+    () => pickActiveService(services, activeServiceId),
+    [services, activeServiceId],
+  );
 
   useEffect(() => {
     const onPointerDown = (event: PointerEvent) => {
       const node = event.target as Node;
-      if (servicesWrapRef.current?.contains(node) || accountWrapRef.current?.contains(node)) {
+      if (
+        servicesWrapRef.current?.contains(node) ||
+        accountWrapRef.current?.contains(node)
+      ) {
         return;
       }
       closeAll();
@@ -97,13 +114,19 @@ export function AppShell({
               className="coreUiTriggerButton"
               aria-haspopup="menu"
               aria-expanded={menuState.servicesOpen}
-              onClick={() => (menuState.servicesOpen ? closeAll() : openServices())}
+              onClick={() =>
+                menuState.servicesOpen ? closeAll() : openServices()
+              }
             >
               <span>{activeService?.label ?? 'Select Service'}</span>
               <span className="coreUiChevron">▾</span>
             </button>
             {menuState.servicesOpen ? (
-              <div className="coreUiMenu" role="menu" aria-label="Service Switcher">
+              <div
+                className="coreUiMenu"
+                role="menu"
+                aria-label="Service Switcher"
+              >
                 <div className="coreUiMenuTitle">Services</div>
                 {services.map((service) => (
                   <button
@@ -120,16 +143,27 @@ export function AppShell({
             ) : null}
           </div>
           <nav className="coreUiTopNav" aria-label="Global Navigation">
-            {topNavItems.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                className={`coreUiNavButton ${item.active ? 'coreUiNavButtonActive' : ''}`}
-                onClick={() => handleTopNavSelect(item)}
-              >
-                {item.label}
-              </button>
-            ))}
+            {topNavItems.map((item) =>
+              item.href ? (
+                <a
+                  key={item.id}
+                  href={item.href}
+                  className={`coreUiNavButton coreUiTopNavLink ${item.active ? 'coreUiNavButtonActive' : ''}`}
+                  onClick={() => handleTopNavSelect(item)}
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <button
+                  key={item.id}
+                  type="button"
+                  className={`coreUiNavButton ${item.active ? 'coreUiNavButtonActive' : ''}`}
+                  onClick={() => handleTopNavSelect(item)}
+                >
+                  {item.label}
+                </button>
+              ),
+            )}
           </nav>
         </div>
 
@@ -140,7 +174,9 @@ export function AppShell({
               className="coreUiTriggerButton"
               aria-haspopup="menu"
               aria-expanded={menuState.accountOpen}
-              onClick={() => (menuState.accountOpen ? closeAll() : openAccount())}
+              onClick={() =>
+                menuState.accountOpen ? closeAll() : openAccount()
+              }
             >
               <span>{userDisplayName}</span>
               <span className="coreUiChevron">▾</span>

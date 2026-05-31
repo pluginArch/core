@@ -1,4 +1,4 @@
-# @pluginArch/core-ui
+# @pluginarch/core-ui
 
 Shared UI shell library for plugin applications.
 
@@ -13,43 +13,50 @@ Shared UI shell library for plugin applications.
 ## Usage
 
 ```tsx
-import { AppShell, type AccountAction, type ServiceItem, type TopNavItem } from '@pluginArch/core-ui';
+import {
+  AppShell,
+  type AccountAction,
+  type ServiceItem,
+  type TopNavItem,
+} from '@pluginarch/core-ui';
 
 const topNavItems: TopNavItem[] = [
-	{ id: 'dashboard', label: 'Dashboard', active: true },
-	{ id: 'plugins', label: 'Plugins' },
-	{ id: 'observability', label: 'Observability' },
+  { id: 'dashboard', label: 'Dashboard', active: true },
+  { id: 'plugins', label: 'Plugins' },
+  { id: 'observability', label: 'Observability' },
 ];
 
 const services: ServiceItem[] = [
-	{ id: 'control', label: 'Control Plane' },
-	{ id: 'catalog', label: 'Plugin Catalog' },
-	{ id: 'events', label: 'Event Hub' },
+  { id: 'control', label: 'Control Plane' },
+  { id: 'catalog', label: 'Plugin Catalog' },
+  { id: 'events', label: 'Event Hub' },
 ];
 
 const accountActions: AccountAction[] = [
-	{ id: 'profile', label: 'Profile' },
-	{ id: 'settings', label: 'Settings' },
-	{ id: 'signout', label: 'Sign out', danger: true },
+  { id: 'profile', label: 'Profile' },
+  { id: 'settings', label: 'Settings' },
+  { id: 'signout', label: 'Sign out', danger: true },
 ];
 
 export function App() {
-	return (
-		<AppShell
-			brand="PluginArch"
-			topNavItems={topNavItems}
-			services={services}
-			accountActions={accountActions}
-			userDisplayName="Dhixson"
-			footerText="Copyright © 2026 PluginArch"
-			onTopNavSelect={(item) => console.log('top nav', item)}
-			onServiceSelect={(service) => console.log('service', service)}
-			onAccountActionSelect={(action) => console.log('account action', action)}
-		>
-			<h1>Plugin Home</h1>
-			<p>Use this shell to keep a consistent look and feel across plugin apps.</p>
-		</AppShell>
-	);
+  return (
+    <AppShell
+      brand="PluginArch"
+      topNavItems={topNavItems}
+      services={services}
+      accountActions={accountActions}
+      userDisplayName="Dhixson"
+      footerText="Copyright © 2026 PluginArch"
+      onTopNavSelect={(item) => console.log('top nav', item)}
+      onServiceSelect={(service) => console.log('service', service)}
+      onAccountActionSelect={(action) => console.log('account action', action)}
+    >
+      <h1>Plugin Home</h1>
+      <p>
+        Use this shell to keep a consistent look and feel across plugin apps.
+      </p>
+    </AppShell>
+  );
 }
 ```
 
@@ -59,9 +66,9 @@ Override CSS variables in the host app to brand plugin experiences:
 
 ```css
 :root {
-	--core-ui-header-bg: #0a1526;
-	--core-ui-accent: #0f8f6f;
-	--core-ui-font-family: 'Sora', 'Segoe UI', sans-serif;
+  --core-ui-header-bg: #0a1526;
+  --core-ui-accent: #0f8f6f;
+  --core-ui-font-family: 'Sora', 'Segoe UI', sans-serif;
 }
 ```
 

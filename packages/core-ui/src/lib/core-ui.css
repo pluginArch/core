@@ -1,7 +1,12 @@
 :root {
   --core-ui-font-family: 'Sora', 'Segoe UI', sans-serif;
-  --core-ui-page-bg: radial-gradient(circle at 20% -20%, #d9e6ff 0%, #f6f8fc 45%, #eef2f7 100%);
-  --core-ui-header-bg: #0f1b2d;
+  --core-ui-page-bg: radial-gradient(
+    circle at 20% -20%,
+    #d9e6ff 0%,
+    #f6f8fc 45%,
+    #eef2f7 100%
+  );
+  --core-ui-header-bg: linear-gradient(120deg, #0f1b2d 0%, #1d2f4b 100%);
   --core-ui-header-text: #f0f4ff;
   --core-ui-header-muted: #a4b3cc;
   --core-ui-accent: #1f70ff;
@@ -33,7 +38,7 @@
   gap: 16px;
   align-items: center;
   padding: 10px 20px;
-  background: linear-gradient(120deg, #0f1b2d 0%, #1d2f4b 100%);
+  background: var(--core-ui-header-bg);
   border-bottom: 1px solid rgba(240, 244, 255, 0.12);
 }
 
@@ -66,11 +71,20 @@
   border-radius: 10px;
   cursor: pointer;
   font: inherit;
-  transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease;
+  transition:
+    color 120ms ease,
+    background-color 120ms ease,
+    border-color 120ms ease;
 }
 
 .coreUiNavButton {
   padding: 8px 10px;
+}
+
+.coreUiTopNavLink {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
 }
 
 .coreUiNavButton:hover,
@@ -85,8 +99,8 @@
 
 .coreUiNavButtonActive {
   color: var(--core-ui-header-text);
-  background-color: rgba(31, 112, 255, 0.18);
-  border-color: rgba(73, 138, 255, 0.4);
+  background-color: color-mix(in srgb, var(--core-ui-accent) 20%, transparent);
+  border-color: color-mix(in srgb, var(--core-ui-accent) 45%, white);
 }
 
 .coreUiTriggerButton {
