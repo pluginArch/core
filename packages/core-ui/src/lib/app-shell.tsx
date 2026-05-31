@@ -5,6 +5,7 @@ import type {
   ServiceItem,
   TopNavItem,
 } from './types';
+import './core-ui.css';
 
 interface MenuState {
   servicesOpen: boolean;

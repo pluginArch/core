@@ -60,6 +60,7 @@ async function createWorkspaceFixture(overrides?: {
         default: './dist/index.js',
       },
       './styles': {
+        '@pluginarch/source': './src/lib/core-ui.css',
         default: './dist/index.css',
       },
     },
@@ -104,6 +105,38 @@ describe('policy-check script', () => {
       expect(result.status).toBe(1);
       expect(result.stderr).toContain(
         'tsconfig.base.json compilerOptions.customConditions must include @pluginarch/source.',
+      );
+    } finally {
+      await rm(fixtureRoot, { recursive: true, force: true });
+    }
+  });
+
+  it('fails when styles source condition mapping is missing', async () => {
+    const fixtureRoot = await createWorkspaceFixture();
+
+    await writeJson(join(fixtureRoot, 'packages/core-ui/package.json'), {
+      name: '@pluginarch/core-ui',
+      exports: {
+        '.': {
+          '@pluginarch/source': './src/index.ts',
+          import: './dist/index.js',
+          default: './dist/index.js',
+        },
+        './styles': {
+          default: './dist/index.css',
+        },
+      },
+    });
+
+    try {
+      const result = spawnSync(process.execPath, [SCRIPT_PATH], {
+        cwd: fixtureRoot,
+        encoding: 'utf8',
+      });
+
+      expect(result.status).toBe(1);
+      expect(result.stderr).toContain(
+        'packages/core-ui/package.json exports["./styles"] must map @pluginarch/source to ./src/lib/core-ui.css.',
       );
     } finally {
       await rm(fixtureRoot, { recursive: true, force: true });

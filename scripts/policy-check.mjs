@@ -107,6 +107,12 @@ function checkCoreUiExports(coreUiPackageJson) {
       'packages/core-ui/package.json exports["./styles"] default must map to ./dist/index.css.',
     );
   }
+
+  if (stylesExport[SOURCE_CONDITION] !== './src/lib/core-ui.css') {
+    fail(
+      `packages/core-ui/package.json exports["./styles"] must map ${SOURCE_CONDITION} to ./src/lib/core-ui.css.`,
+    );
+  }
 }
 
 async function checkMainViteConditions(rootDir) {

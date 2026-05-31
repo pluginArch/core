@@ -12,10 +12,7 @@ Shared UI shell library for plugin applications.
 
 ## Usage
 
-Published consumers can use either style contract:
-
-- Automatic (root import): importing `@pluginarch/core-ui` loads the base stylesheet as a side effect.
-- Explicit (recommended for clarity): import `@pluginarch/core-ui/styles` once in your app entrypoint.
+Published consumers should import styles explicitly once in their app entrypoint:
 
 ```tsx
 import '@pluginarch/core-ui/styles';

@@ -15,8 +15,8 @@
 
 For `@pluginarch/core-ui` specifically:
 
-- `@pluginarch/core-ui` root import includes base styles as a side effect.
-- `@pluginarch/core-ui/styles` is the explicit public stylesheet entrypoint.
+- `@pluginarch/core-ui/styles` is the explicit public stylesheet entrypoint for published consumers.
+- Local workspace development still resolves styles through the `@pluginarch/source` condition path.
 
 ## Workspace Guardrails
 
