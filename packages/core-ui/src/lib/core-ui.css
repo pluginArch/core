@@ -1,0 +1,234 @@
+:root {
+  --core-ui-font-family: 'Sora', 'Segoe UI', sans-serif;
+  --core-ui-page-bg: radial-gradient(
+    circle at 20% -20%,
+    #d9e6ff 0%,
+    #f6f8fc 45%,
+    #eef2f7 100%
+  );
+  --core-ui-header-bg: linear-gradient(120deg, #0f1b2d 0%, #1d2f4b 100%);
+  --core-ui-header-text: #f0f4ff;
+  --core-ui-header-muted: #a4b3cc;
+  --core-ui-accent: #1f70ff;
+  --core-ui-surface: #ffffff;
+  --core-ui-surface-muted: #f4f7fc;
+  --core-ui-border: #d7dfeb;
+  --core-ui-text: #12213c;
+  --core-ui-text-muted: #50617f;
+  --core-ui-danger: #c4384f;
+  --core-ui-shadow: 0 12px 26px rgba(16, 30, 57, 0.14);
+  --core-ui-radius: 14px;
+}
+
+.coreUiShell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background: var(--core-ui-page-bg);
+  color: var(--core-ui-text);
+  font-family: var(--core-ui-font-family);
+}
+
+.coreUiHeader {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 10px 20px;
+  background: var(--core-ui-header-bg);
+  border-bottom: 1px solid rgba(240, 244, 255, 0.12);
+}
+
+.coreUiHeaderLeft,
+.coreUiHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.coreUiBrand {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--core-ui-header-text);
+  letter-spacing: 0.02em;
+}
+
+.coreUiTopNav {
+  display: flex;
+  gap: 8px;
+  margin-left: 4px;
+}
+
+.coreUiNavButton,
+.coreUiTriggerButton,
+.coreUiActionButton {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--core-ui-header-muted);
+  border-radius: 10px;
+  cursor: pointer;
+  font: inherit;
+  transition:
+    color 120ms ease,
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+.coreUiNavButton {
+  padding: 8px 10px;
+}
+
+.coreUiTopNavLink {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.coreUiNavButton:hover,
+.coreUiNavButton:focus-visible,
+.coreUiTriggerButton:hover,
+.coreUiTriggerButton:focus-visible {
+  color: var(--core-ui-header-text);
+  background-color: rgba(240, 244, 255, 0.08);
+  border-color: rgba(240, 244, 255, 0.16);
+  outline: none;
+}
+
+.coreUiNavButtonActive {
+  color: var(--core-ui-header-text);
+  background-color: color-mix(in srgb, var(--core-ui-accent) 20%, transparent);
+  border-color: color-mix(in srgb, var(--core-ui-accent) 45%, white);
+}
+
+.coreUiTriggerButton {
+  padding: 8px 10px;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--core-ui-header-text);
+}
+
+.coreUiChevron {
+  font-size: 0.72rem;
+  line-height: 1;
+}
+
+.coreUiMenuWrap {
+  position: relative;
+}
+
+.coreUiMenu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 250px;
+  background: var(--core-ui-surface);
+  border: 1px solid var(--core-ui-border);
+  border-radius: var(--core-ui-radius);
+  box-shadow: var(--core-ui-shadow);
+  padding: 8px;
+}
+
+.coreUiMenu[aria-label='Service Switcher'] {
+  left: 0;
+  right: auto;
+}
+
+.coreUiMenuTitle {
+  padding: 8px 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--core-ui-text-muted);
+}
+
+.coreUiActionButton {
+  width: 100%;
+  text-align: left;
+  padding: 9px 10px;
+  border-radius: 10px;
+  color: var(--core-ui-text);
+}
+
+.coreUiActionButton:hover,
+.coreUiActionButton:focus-visible {
+  outline: none;
+  background: var(--core-ui-surface-muted);
+  border-color: var(--core-ui-border);
+}
+
+.coreUiActionDanger {
+  color: var(--core-ui-danger);
+}
+
+.coreUiMain {
+  padding: 24px;
+  width: min(1200px, 100%);
+  margin: 0 auto;
+}
+
+.coreUiContent {
+  background: var(--core-ui-surface);
+  border: 1px solid var(--core-ui-border);
+  border-radius: var(--core-ui-radius);
+  box-shadow: var(--core-ui-shadow);
+  padding: 22px;
+  min-height: 320px;
+}
+
+.coreUiFooter {
+  border-top: 1px solid var(--core-ui-border);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(4px);
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  color: var(--core-ui-text-muted);
+  font-size: 0.9rem;
+}
+
+.coreUiFooterLinks {
+  display: flex;
+  gap: 14px;
+}
+
+.coreUiFooterLinks a {
+  color: inherit;
+}
+
+@media (max-width: 980px) {
+  .coreUiHeader {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .coreUiHeaderRight {
+    justify-content: space-between;
+  }
+
+  .coreUiTopNav {
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+}
+
+@media (max-width: 640px) {
+  .coreUiMain {
+    padding: 14px;
+  }
+
+  .coreUiContent {
+    padding: 16px;
+  }
+
+  .coreUiFooter {
+    padding: 12px 14px;
+  }
+}
