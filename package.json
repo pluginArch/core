@@ -4,6 +4,9 @@
   "license": "MIT",
   "scripts": {
     "affected": "nx affected -t build,test,typecheck --outputStyle=static",
+    "policy:check": "node ./scripts/policy-check.mjs",
+    "policy:test": "vitest run scripts/policy-check.spec.ts",
+    "sync:check": "nx sync:check",
     "release:publish": "nx release publish --registry=https://npm.pkg.github.com",
     "release:publish:core-ui": "nx release publish -p core-ui --registry=https://npm.pkg.github.com",
     "prepare": "husky"

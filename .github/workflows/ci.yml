@@ -33,6 +33,9 @@ jobs:
       - run: npm ci
 
       # Prepend any command with "nx record --" to record its logs to Nx Cloud
+      - run: npm run policy:test
+      - run: npm run policy:check
+      - run: npm run sync:check
       - run: npx nx record -- npx nx format:check  --base="remotes/origin/main"
       - run: npx nx run-many -t lint test build typecheck e2e-ci
       # Nx Cloud recommends fixes for failures to help you get CI green faster. Learn more: https://nx.dev/ci/features/self-healing-ci

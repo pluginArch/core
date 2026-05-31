@@ -6,6 +6,25 @@
 
 [Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/js?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
 
+## Workspace Linking Conventions
+
+- Internal development linking uses npm workspaces + TypeScript project references.
+- Local source resolution uses the `@pluginarch/source` condition across TypeScript, package exports, and Vite config.
+- Published consumers must rely on `dist` exports from each package.
+- Dependency versions are managed in the root `package.json` to preserve single-version policy.
+
+For `@pluginarch/core-ui` specifically:
+
+- `@pluginarch/core-ui/styles` is the explicit public stylesheet entrypoint for published consumers.
+- Local workspace development still resolves styles through the `@pluginarch/source` condition path.
+
+## Workspace Guardrails
+
+- Run `npm run policy:check` to validate source-condition consistency, export contracts, and single-version policy.
+- Run `npm run sync:check` to ensure TypeScript project references are in sync.
+
+The CI workflow runs both checks before build/test targets.
+
 ## Try the full Nx platform
 
 🚀 If you haven't connected to Nx Cloud yet, [complete your setup here](https://cloud.nx.app/setup/connect-workspace/guide). Get faster builds with remote caching, distributed task execution, and self-healing CI. [See how your workspace can benefit](#nx-cloud).

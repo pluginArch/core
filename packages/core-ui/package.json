@@ -12,6 +12,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./styles": {
+      "@pluginarch/source": "./src/lib/core-ui.css",
+      "default": "./dist/index.css"
     }
   },
   "peerDependencies": {
