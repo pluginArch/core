@@ -42,7 +42,8 @@
     "vitest": "~4.1.0"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "dependencies": {
     "react": "^19.2.6",
