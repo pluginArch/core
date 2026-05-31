@@ -17,7 +17,8 @@
           "format": [
             "cjs"
           ],
-          "bundle": false,
+          "bundle": true,
+          "declaration": false,
           "main": "services/registryApi/src/main.ts",
           "tsConfig": "services/registryApi/tsconfig.app.json",
           "assets": [
