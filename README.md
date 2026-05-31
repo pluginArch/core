@@ -59,6 +59,37 @@ These targets are either [inferred automatically](https://nx.dev/concepts/inferr
 
 [More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
+## Plugin Registry API
+
+The workspace includes a Fastify backend service at `services/registryApi` with MongoDB-backed CRUD endpoints for plugin registration.
+
+### Endpoints
+
+- `POST /plugins`
+- `GET /plugins`
+- `GET /plugins/:pluginId`
+- `PUT /plugins/:pluginId`
+- `DELETE /plugins/:pluginId`
+
+### Environment
+
+- `PORT` (default: `3000`)
+- `HOST` (default: `localhost`)
+- `MONGODB_URI` (default: `mongodb://localhost:27017`)
+- `MONGODB_DB` (default: `pluginarch`)
+
+### Run locally
+
+```sh
+npx nx serve registryApi
+```
+
+## Shared Models
+
+Shared plugin contracts are defined in `packages/models` and imported in-repo via `@pluginarch/models`.
+
+The models library is configured as a non-buildable workspace library so consuming apps/packages compile and bundle those source-level contracts as part of their own build output.
+
 ## Versioning and releasing
 
 To version and release the library use
