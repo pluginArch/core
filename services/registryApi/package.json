@@ -81,20 +81,21 @@
         "continuous": true,
         "executor": "@nx/js:node",
         "defaultConfiguration": "development",
-        "dependsOn": [
-          "build"
-        ],
         "options": {
-          "buildTarget": "registryApi:build",
-          "runBuildTargetDependencies": false
+          "buildTarget": "registryApi:build:development",
+          "runBuildTargetDependencies": true
         },
         "configurations": {
-          "development": {
-            "buildTarget": "registryApi:build:development"
-          },
           "production": {
             "buildTarget": "registryApi:build:production"
           }
+        }
+      },
+      "integration-test": {
+        "executor": "nx:run-commands",
+        "options": {
+          "cwd": "services/registryApi",
+          "command": "vitest run src/app/integration"
         }
       }
     }

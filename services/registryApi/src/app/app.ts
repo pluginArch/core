@@ -1,27 +1,18 @@
-import * as path from 'path';
 import { FastifyInstance } from 'fastify';
-import AutoLoad from '@fastify/autoload';
+import mongodbPlugin from './plugins/mongodb';
+import openapiPlugin from './plugins/openapi';
+import sensiblePlugin from './plugins/sensible';
+import pluginsRoutes from './routes/plugins';
+import rootRoutes from './routes/root';
 
 /* eslint-disable-next-line */
 export interface AppOptions {}
 
 export async function app(fastify: FastifyInstance, opts: AppOptions) {
-  // Place here your custom code!
+  fastify.register(openapiPlugin, { ...opts });
+  fastify.register(sensiblePlugin, { ...opts });
+  fastify.register(mongodbPlugin, { ...opts });
 
-  // Do not touch the following lines
-
-  // This loads all plugins defined in plugins
-  // those should be support plugins that are reused
-  // through your application
-  fastify.register(AutoLoad, {
-    dir: path.join(__dirname, 'plugins'),
-    options: { ...opts },
-  });
-
-  // This loads all plugins defined in routes
-  // define your routes in one of these
-  fastify.register(AutoLoad, {
-    dir: path.join(__dirname, 'routes'),
-    options: { ...opts },
-  });
+  fastify.register(rootRoutes, { ...opts });
+  fastify.register(pluginsRoutes, { ...opts });
 }
