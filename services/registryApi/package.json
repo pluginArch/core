@@ -1,0 +1,104 @@
+{
+  "name": "@pluginarch/registryApi",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "name": "registryApi",
+    "targets": {
+      "build": {
+        "executor": "@nx/esbuild:esbuild",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "defaultConfiguration": "production",
+        "options": {
+          "platform": "node",
+          "outputPath": "services/registryApi/dist",
+          "format": [
+            "cjs"
+          ],
+          "bundle": true,
+          "declaration": false,
+          "main": "services/registryApi/src/main.ts",
+          "tsConfig": "services/registryApi/tsconfig.app.json",
+          "assets": [
+            "services/registryApi/src/assets"
+          ],
+          "esbuildOptions": {
+            "sourcemap": true,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        },
+        "configurations": {
+          "development": {},
+          "production": {
+            "esbuildOptions": {
+              "sourcemap": false,
+              "outExtension": {
+                ".js": ".js"
+              }
+            }
+          }
+        }
+      },
+      "prune-lockfile": {
+        "dependsOn": [
+          "build"
+        ],
+        "cache": true,
+        "executor": "@nx/js:prune-lockfile",
+        "outputs": [
+          "{workspaceRoot}/services/registryApi/dist/package.json",
+          "{workspaceRoot}/services/registryApi/dist/package-lock.json"
+        ],
+        "options": {
+          "buildTarget": "build"
+        }
+      },
+      "copy-workspace-modules": {
+        "dependsOn": [
+          "build"
+        ],
+        "cache": true,
+        "outputs": [
+          "{workspaceRoot}/services/registryApi/dist/workspace_modules"
+        ],
+        "executor": "@nx/js:copy-workspace-modules",
+        "options": {
+          "buildTarget": "build"
+        }
+      },
+      "prune": {
+        "dependsOn": [
+          "prune-lockfile",
+          "copy-workspace-modules"
+        ],
+        "executor": "nx:noop"
+      },
+      "serve": {
+        "continuous": true,
+        "executor": "@nx/js:node",
+        "defaultConfiguration": "development",
+        "options": {
+          "buildTarget": "registryApi:build:development",
+          "runBuildTargetDependencies": true
+        },
+        "configurations": {
+          "production": {
+            "buildTarget": "registryApi:build:production"
+          }
+        }
+      },
+      "integration-test": {
+        "executor": "nx:run-commands",
+        "options": {
+          "cwd": "services/registryApi",
+          "command": "vitest run src/app/integration"
+        }
+      }
+    }
+  },
+  "dependencies": {}
+}
