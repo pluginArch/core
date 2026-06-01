@@ -27,6 +27,11 @@ export default fp(async function (fastify: FastifyInstance) {
     { unique: true, name: 'pluginId_unique' },
   );
 
+  await pluginRegistryCollection.createIndex(
+    { displayName: 'text' },
+    { name: 'displayName_text' },
+  );
+
   fastify.decorate('pluginRegistryCollection', pluginRegistryCollection);
 
   fastify.addHook('onClose', async () => {

@@ -84,6 +84,22 @@ const pluginParamsSchema = {
   },
 } as const;
 
+const listPluginsQuerySchema = {
+  type: 'object',
+  additionalProperties: false,
+  properties: {
+    search: { type: 'string' },
+  },
+} as const;
+
+interface ListPluginsQuery {
+  search?: string;
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function isDuplicateKeyError(error: unknown): boolean {
   const code = (error as { code?: number | string } | null | undefined)?.code;
   return code === 11000 || code === '11000';
@@ -142,18 +158,39 @@ export default async function (fastify: FastifyInstance) {
     },
   });
 
-  fastify.get('/plugins', {
+  fastify.get<{ Querystring: ListPluginsQuery }>('/plugins', {
     schema: {
       tags: ['plugins'],
       operationId: 'listPlugins',
-      summary: 'List all plugin records',
+      summary: 'List plugin records, optionally filtered by search term',
+      querystring: listPluginsQuerySchema,
       response: {
         200: pluginListSchema,
+        400: messageErrorSchema,
       },
     },
-    handler: async () => {
+    handler: async (request, reply) => {
+      const search = request.query.search;
+
+      if (search !== undefined && search.trim().length === 0) {
+        return reply.code(400).send({
+          message: 'search must not be empty when provided.',
+        });
+      }
+
+      const normalizedSearch = search?.trim();
+      const filter =
+        normalizedSearch === undefined
+          ? {}
+          : {
+              displayName: {
+                $regex: escapeRegExp(normalizedSearch),
+                $options: 'i',
+              },
+            };
+
       return fastify.pluginRegistryCollection
-        .find({}, { projection: { _id: 0 } })
+        .find(filter, { projection: { _id: 0 } })
         .toArray();
     },
   });
