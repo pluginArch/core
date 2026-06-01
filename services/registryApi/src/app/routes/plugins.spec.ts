@@ -8,9 +8,8 @@ import pluginRoutes from './plugins.js';
 type PluginRecord = PluginModel;
 
 type SearchQuery = {
-  displayName?: {
-    $regex?: string;
-    $options?: string;
+  $text?: {
+    $search?: string;
   };
 };
 
@@ -35,15 +34,21 @@ function createCollectionStub(initialData: PluginRecord[] = []) {
     find: (query?: SearchQuery) => ({
       toArray: async () => {
         const allRecords = Array.from(records.values());
-        const searchTerm = query?.displayName?.$regex?.trim().toLowerCase();
+        const rawSearch = query?.$text?.$search?.trim().toLowerCase();
 
-        if (!searchTerm) {
+        if (!rawSearch) {
           return allRecords;
         }
 
-        return allRecords.filter((record) =>
-          record.displayName.toLowerCase().includes(searchTerm),
-        );
+        const tokens = rawSearch.split(/\s+/).filter(Boolean);
+        if (!tokens.length) {
+          return allRecords;
+        }
+
+        return allRecords.filter((record) => {
+          const displayName = record.displayName.toLowerCase();
+          return tokens.some((token) => displayName.includes(token));
+        });
       },
     }),
     findOne: async (query: { pluginId: string }) => {

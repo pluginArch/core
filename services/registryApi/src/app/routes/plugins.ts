@@ -96,10 +96,6 @@ interface ListPluginsQuery {
   search?: string;
 }
 
-function escapeRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
 function isDuplicateKeyError(error: unknown): boolean {
   const code = (error as { code?: number | string } | null | undefined)?.code;
   return code === 11000 || code === '11000';
@@ -182,12 +178,7 @@ export default async function (fastify: FastifyInstance) {
       const filter =
         normalizedSearch === undefined
           ? {}
-          : {
-              displayName: {
-                $regex: escapeRegExp(normalizedSearch),
-                $options: 'i',
-              },
-            };
+          : { $text: { $search: normalizedSearch } };
 
       return fastify.pluginRegistryCollection
         .find(filter, { projection: { _id: 0 } })
