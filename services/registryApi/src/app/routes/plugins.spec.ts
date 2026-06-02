@@ -7,6 +7,12 @@ import pluginRoutes from './plugins.js';
 
 type PluginRecord = PluginModel;
 
+type SearchQuery = {
+  $text?: {
+    $search?: string;
+  };
+};
+
 function createCollectionStub(initialData: PluginRecord[] = []) {
   const records = new Map(
     initialData.map((plugin) => [plugin.pluginId, plugin]),
@@ -25,8 +31,25 @@ function createCollectionStub(initialData: PluginRecord[] = []) {
       records.set(plugin.pluginId, plugin);
       return { acknowledged: true };
     },
-    find: () => ({
-      toArray: async () => Array.from(records.values()),
+    find: (query?: SearchQuery) => ({
+      toArray: async () => {
+        const allRecords = Array.from(records.values());
+        const rawSearch = query?.$text?.$search?.trim().toLowerCase();
+
+        if (!rawSearch) {
+          return allRecords;
+        }
+
+        const tokens = rawSearch.split(/\s+/).filter(Boolean);
+        if (!tokens.length) {
+          return allRecords;
+        }
+
+        return allRecords.filter((record) => {
+          const displayName = record.displayName.toLowerCase();
+          return tokens.some((token) => displayName.includes(token));
+        });
+      },
     }),
     findOne: async (query: { pluginId: string }) => {
       return records.get(query.pluginId) ?? null;
@@ -134,6 +157,105 @@ describe('plugins routes', () => {
     });
 
     expect(response.statusCode).toBe(404);
+
+    await fastify.close();
+  });
+
+  it('lists all plugins when search is missing', async () => {
+    const pluginOne = {
+      pluginId: 'plugin-1',
+      displayName: 'Calendar Integrations',
+      iconUrl: 'https://example.com/calendar.png',
+      appUrl: 'https://example.com/calendar',
+    };
+
+    const pluginTwo = {
+      pluginId: 'plugin-2',
+      displayName: 'Weather Hub',
+      iconUrl: 'https://example.com/weather.png',
+      appUrl: 'https://example.com/weather',
+    };
+
+    const fastify = Fastify();
+    await fastify.register(sensible);
+
+    fastify.decorate(
+      'pluginRegistryCollection',
+      createCollectionStub([
+        pluginOne,
+        pluginTwo,
+      ]) as unknown as Collection<PluginModel>,
+    );
+
+    await fastify.register(pluginRoutes);
+
+    const response = await fastify.inject({ method: 'GET', url: '/plugins' });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toEqual([pluginOne, pluginTwo]);
+
+    await fastify.close();
+  });
+
+  it('filters plugins by displayName when search is provided', async () => {
+    const pluginOne = {
+      pluginId: 'plugin-1',
+      displayName: 'Calendar Integrations',
+      iconUrl: 'https://example.com/calendar.png',
+      appUrl: 'https://example.com/calendar',
+    };
+
+    const pluginTwo = {
+      pluginId: 'plugin-2',
+      displayName: 'Weather Hub',
+      iconUrl: 'https://example.com/weather.png',
+      appUrl: 'https://example.com/weather',
+    };
+
+    const fastify = Fastify();
+    await fastify.register(sensible);
+
+    fastify.decorate(
+      'pluginRegistryCollection',
+      createCollectionStub([
+        pluginOne,
+        pluginTwo,
+      ]) as unknown as Collection<PluginModel>,
+    );
+
+    await fastify.register(pluginRoutes);
+
+    const response = await fastify.inject({
+      method: 'GET',
+      url: '/plugins?search=calendar',
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toEqual([pluginOne]);
+
+    await fastify.close();
+  });
+
+  it('returns 400 when search is empty', async () => {
+    const fastify = Fastify();
+    await fastify.register(sensible);
+
+    fastify.decorate(
+      'pluginRegistryCollection',
+      createCollectionStub() as unknown as Collection<PluginModel>,
+    );
+
+    await fastify.register(pluginRoutes);
+
+    const response = await fastify.inject({
+      method: 'GET',
+      url: '/plugins?search=   ',
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toEqual({
+      message: 'search must not be empty when provided.',
+    });
 
     await fastify.close();
   });

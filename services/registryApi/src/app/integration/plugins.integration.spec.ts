@@ -125,4 +125,60 @@ describe('registryApi integration', () => {
     expect(openapi.paths).toHaveProperty('/plugins');
     expect(openapi.paths).toHaveProperty('/plugins/{pluginId}');
   });
+
+  it('supports searching plugins by displayName over real HTTP', async () => {
+    const pluginOne: PluginModel = {
+      pluginId: 'plugin-search-1',
+      displayName: 'Calendar Integrations',
+      iconUrl: 'https://example.com/calendar.png',
+      appUrl: 'https://example.com/calendar',
+    };
+
+    const pluginTwo: PluginModel = {
+      pluginId: 'plugin-search-2',
+      displayName: 'Weather Hub',
+      iconUrl: 'https://example.com/weather.png',
+      appUrl: 'https://example.com/weather',
+    };
+
+    await fetch(`${baseUrl}/plugins`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(pluginOne),
+    });
+
+    await fetch(`${baseUrl}/plugins`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(pluginTwo),
+    });
+
+    const allPluginsResponse = await fetch(`${baseUrl}/plugins`);
+    expect(allPluginsResponse.status).toBe(200);
+    const allPlugins = (await allPluginsResponse.json()) as PluginModel[];
+    const allPluginIds = allPlugins.map((plugin) => plugin.pluginId);
+
+    expect(allPluginIds).toEqual(
+      expect.arrayContaining([pluginOne.pluginId, pluginTwo.pluginId]),
+    );
+
+    const filteredResponse = await fetch(`${baseUrl}/plugins?search=calendar`);
+    expect(filteredResponse.status).toBe(200);
+
+    const filteredPlugins = (await filteredResponse.json()) as PluginModel[];
+    expect(filteredPlugins).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ pluginId: pluginOne.pluginId }),
+      ]),
+    );
+    expect(filteredPlugins).toHaveLength(1);
+
+    const emptySearchResponse = await fetch(
+      `${baseUrl}/plugins?search=${encodeURIComponent('   ')}`,
+    );
+    expect(emptySearchResponse.status).toBe(400);
+    expect(await emptySearchResponse.json()).toEqual({
+      message: 'search must not be empty when provided.',
+    });
+  });
 });
